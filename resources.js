@@ -5,8 +5,6 @@
 // folder of this repo, or any direct public link).
 // ============================================================
 
-const CAL_LINK = "https://cal.com/jenni-mae-ceibpf/intro-call-with-jenni"; // your cal.com booking link, set once
-
 const RESOURCES = {
   "ferritin-guide": {
     title: "Raise Your Ferritin",
