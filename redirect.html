@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your download is being prepared</title>
+<script src="resources.js"></script>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #fdf6f3;
+    margin: 0;
+    padding: 24px 16px 60px;
+    color: #4a2f33;
+  }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.6rem;
+    margin: 12px 0 24px;
+    color: #b06b7a;
+  }
+  #cal-embed {
+    width: 100%;
+    height: 650px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(176,107,122,0.15);
+  }
+  .skip-btn {
+    display: block;
+    margin: 28px auto 0;
+    background: none;
+    border: none;
+    color: #9a7a80;
+    text-decoration: underline;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Your download is being prepared</h1>
+    <div id="cal-embed"></div>
+    <button class="skip-btn" id="skipBtn">Thanks but I'll do it on my own</button>
+  </div>
+
+<!-- Cal.com official embed loader -->
+<script type="text/javascript">
+  (function (C, A, L) {
+    let p = function (a, ar) { a.q.push(ar); };
+    let d = C.document;
+    C.Cal = C.Cal || function () {
+      let cal = C.Cal, ar = arguments;
+      if (!cal.loaded) {
+        cal.ns = {}; cal.q = cal.q || [];
+        d.head.appendChild(d.createElement("script")).src = A;
+        cal.loaded = true;
+      }
+      if (ar[0] === L) {
+        const api = function () { p(api, arguments); }, ns = ar[1];
+        api.q = api.q || [];
+        if (typeof ns === "string") { cal.ns[ns] = cal.ns[ns] || api; p(cal.ns[ns], ar); p(cal, ["initNamespace", ns]); }
+        else p(cal, ar);
+        return;
+      }
+      p(cal, ar);
+    };
+  })(window, "https://app.cal.com/embed/embed.js", "init");
+
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get("r");
+  const resource = RESOURCES[slug];
+
+  function goToThanks() {
+    window.location.href = "thanks.html?r=" + encodeURIComponent(slug || "");
+  }
+
+  document.getElementById("skipBtn").addEventListener("click", goToThanks);
+
+  // Turn the full pasted URL (https://cal.com/username/event) into the
+  // "username/event" format the embed script expects
+  const calLinkPath = CAL_LINK.replace(/^https?:\/\/[^/]+\//, "");
+
+  Cal("init", { origin: "https://cal.com" });
+  Cal("inline", {
+    elementOrSelector: "#cal-embed",
+    calLink: calLinkPath,
+    config: { layout: "month_view" }
+  });
+  Cal("on", {
+    action: "bookingSuccessful",
+    callback: goToThanks
+  });
+
+  if (!resource) {
+    console.warn("No resource found for slug:", slug);
+  }
+</script>
+</body>
+</html>
