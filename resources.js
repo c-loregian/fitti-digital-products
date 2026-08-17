@@ -5,12 +5,12 @@
 // folder of this repo, or any direct public link).
 // ============================================================
 
-const CAL_LINK = "https://cal.com/your-username/intro-call"; // your cal.com booking link, set once
+const CAL_LINK = "https://cal.com/jenni-mae-ceibpf/intro-call-with-jenni"; // your cal.com booking link, set once
 
 const RESOURCES = {
   "ferritin-guide": {
-    title: "The Ferritin Guide",
-    downloadUrl: "resources/ferritin-guide.pdf"
+    title: "Raise Your Ferritin",
+    downloadUrl: "resources/Raise Your Ferritin Guide.pdf"
   }
 
   // Example of how to add another one:
