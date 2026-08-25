@@ -35,8 +35,50 @@
     text-align: center;
     font-size: 1rem;
     color: #6f5559;
-    margin: 0 0 24px;
+    margin: 0 0 28px;
     line-height: 1.5;
+  }
+  .join-card {
+    background: #fff;
+    border: 1px solid rgba(139,54,43,0.15);
+    border-radius: 14px;
+    padding: 24px 22px;
+    box-shadow: 0 4px 20px rgba(176,107,122,0.12);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .join-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    color: #8b362b;
+  }
+  .join-card p {
+    margin: 0 0 18px;
+    color: #6f5559;
+    line-height: 1.5;
+    font-size: 0.97rem;
+  }
+  .join-btn {
+    display: inline-block;
+    background: #8b362b;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .or-divider {
+    text-align: center;
+    color: #9a7a80;
+    font-size: 0.9rem;
+    margin: 0 0 6px;
+  }
+  .call-heading {
+    text-align: center;
+    font-size: 1.15rem;
+    color: #8b362b;
+    margin: 0 0 14px;
   }
   #cal-embed {
     width: 100%;
@@ -60,7 +102,16 @@
 <body>
   <div class="wrap">
     <h1>Your download is being prepared...</h1>
-    <p class="subhead">While you wait, grab your free spot with me. I'll show you how to use this guide so it actually gets you results!</p>
+    <p class="subhead">Before you grab it, here are two ways I can help you actually put it into practice, or skip straight to your download below.</p>
+
+    <div class="join-card">
+      <h2>Ready to get started?</h2>
+      <p>Join the Fitti Academy for $99/month: the full Fitti Method, weekly live coaching with me, and everything you need to actually put this guide into practice.</p>
+      <a class="join-btn" id="joinBtn" href="#" target="_blank" rel="noopener">Join the Academy — $99/mo</a>
+    </div>
+
+    <p class="or-divider">or, if you'd like it personalised to you:</p>
+    <h2 class="call-heading">Book a free call with me</h2>
     <div style="width:100%;height:650px;overflow:scroll" id="my-cal-inline-intro-call-with-jenni"></div>
     <button class="skip-btn" id="skipBtn">Thanks but I'll try it on my own :)</button>
   </div>
@@ -83,9 +134,21 @@
 <!-- Cal inline embed code ends -->
 
 <script>
+  // Academy signup happens on Skool (it handles its own paid plans/checkout),
+  // so we link straight there. Skool doesn't support passthrough attribution
+  // params on this URL, so attribution for this click lives in the GA event
+  // below instead (resource = which guide sent them here).
+  const ACADEMY_JOIN_URL = "https://www.skool.com/totally-balanced-7966/about";
+
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("r");
   const resource = RESOURCES[slug];
+
+  const joinBtn = document.getElementById("joinBtn");
+  joinBtn.href = ACADEMY_JOIN_URL;
+  joinBtn.addEventListener("click", function () {
+    gtag('event', 'join_now_clicked', { resource: slug || 'unknown' });
+  });
 
   function goToThanks() {
     gtag('event', 'call_booked', { resource: slug || 'unknown' });
