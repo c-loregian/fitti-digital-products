@@ -35,15 +35,38 @@
     text-align: center;
     font-size: 1rem;
     color: #6f5559;
-    margin: 0 0 24px;
+    margin: 0 0 28px;
     line-height: 1.5;
   }
-  #cal-embed {
-    width: 100%;
-    height: 650px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(176,107,122,0.15);
+  .join-card {
+    background: #fff;
+    border: 1px solid rgba(139,54,43,0.15);
+    border-radius: 14px;
+    padding: 24px 22px;
+    box-shadow: 0 4px 20px rgba(176,107,122,0.12);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .join-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.2rem;
+    color: #8b362b;
+  }
+  .join-card p {
+    margin: 0 0 18px;
+    color: #6f5559;
+    line-height: 1.5;
+    font-size: 0.97rem;
+  }
+  .join-btn {
+    display: inline-block;
+    background: #8b362b;
+    color: #fff;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
   }
   .skip-btn {
     display: block;
@@ -60,45 +83,40 @@
 <body>
   <div class="wrap">
     <h1>Your download is being prepared...</h1>
-    <p class="subhead">While you wait, grab your free spot with me. I'll show you how to use this guide so it actually gets you results!</p>
-    <div style="width:100%;height:650px;overflow:scroll" id="my-cal-inline-intro-call-with-jenni"></div>
+    <p class="subhead">Before you grab it, here's how I can help you actually put it into practice, or skip straight to your download below.</p>
+
+    <div class="join-card">
+      <h2>Ready to make lasting change?</h2>
+      <p>Join the Fitti Academy and get the full Fitti Method, weekly live coaching with me, and everything you need to actually APPLY this guide.</p>
+      <a class="join-btn" id="joinBtn" href="#" target="_blank" rel="noopener">Join the Academy</a>
+    </div>
+
     <button class="skip-btn" id="skipBtn">Thanks but I'll try it on my own :)</button>
   </div>
 
-<!-- Cal inline embed code begins -->
-<script type="text/javascript">
-  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-  Cal("init", "intro-call-with-jenni", {origin:"https://app.cal.com"});
-  Cal.config = Cal.config || {};
-  Cal.config.forwardQueryParams = true;
-
-  Cal.ns["intro-call-with-jenni"]("inline", {
-    elementOrSelector:"#my-cal-inline-intro-call-with-jenni",
-    config: {"layout":"month_view","useSlotsViewOnSmallScreen":"true"},
-    calLink: "jenni-mae-ceibpf/intro-call-with-jenni",
-  });
-
-  Cal.ns["intro-call-with-jenni"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
-</script>
-<!-- Cal inline embed code ends -->
-
 <script>
+  // Academy signup happens on Skool (it handles its own paid plans/checkout),
+  // so we link straight there. Skool doesn't support passthrough attribution
+  // params on this URL, so attribution for this click lives in the GA event
+  // below instead (resource = which guide sent them here).
+  const ACADEMY_JOIN_URL = "https://www.skool.com/totally-balanced-7966/about";
+
   const params = new URLSearchParams(window.location.search);
   const slug = params.get("r");
   const resource = RESOURCES[slug];
 
+  const joinBtn = document.getElementById("joinBtn");
+  joinBtn.href = ACADEMY_JOIN_URL;
+  joinBtn.addEventListener("click", function () {
+    gtag('event', 'join_now_clicked', { resource: slug || 'unknown' });
+  });
+
   function goToThanks() {
-    gtag('event', 'call_booked', { resource: slug || 'unknown' });
+    gtag('event', 'guide_downloaded_direct', { resource: slug || 'unknown' });
     window.location.href = "thanks.html?r=" + encodeURIComponent(slug || "");
   }
 
   document.getElementById("skipBtn").addEventListener("click", goToThanks);
-
-  // Redirect automatically once a booking is confirmed
-  Cal.ns["intro-call-with-jenni"]("on", {
-    action: "bookingSuccessful",
-    callback: goToThanks
-  });
 
   if (!resource) {
     console.warn("No resource found for slug:", slug);
